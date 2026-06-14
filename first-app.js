@@ -1,11 +1,14 @@
-import { createServer } from "http";
+import fs from "fs";
+import http from "http";
 
-const server = createServer((req, res) => {
-  console.log("req url =>", req.url);
-  console.log("req method =>", req.method);
-  console.log("req headers =>", req.heades);
+const server = http.createServer((req, res) => {
+  // console.log("req url =>", req.url);
+  // console.log("req method =>", req.method);
+  // console.log("req headers =>", req.heades);
 
   const url = req.url;
+  const method = req.method;
+
   if (url === "/") {
     res.write("<html>");
     res.write("<head><title>Enter Message</title></head>");
@@ -17,6 +20,25 @@ const server = createServer((req, res) => {
               </body>
             `);
     res.write("</html>");
+    return res.end();
+  }
+
+  if (url === "/message" && method === "POST") {
+    const body = [];
+
+    req.on("data", (chunk) => {
+      console.log(chunk);
+      body.push(chunk);
+    });
+
+    req.on("end", () => {
+      const parsedBody = Buffer.concat(body).toString();
+      const message = parsedBody.split("=")[1];
+      fs.writeFileSync("message.txt", message);
+    });
+
+    res.statusCode = 302;
+    res.setHeader("Location", "/");
     return res.end();
   }
 
