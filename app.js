@@ -1,6 +1,6 @@
-const http = require("http");
-const routes = require("./routes");
+import { createServer } from "http";
+import routes from "./routes.js";
 
-const server = http.createServer(routes);
+const server = createServer(routes);
 
 server.listen(3000);

@@ -1,4 +1,4 @@
-const fs = require("fs");
+import { writeFile } from "fs";
 
 const requestHandler = (req, res) => {
   // console.log("req url =>", req.url);
@@ -33,7 +33,7 @@ const requestHandler = (req, res) => {
     return req.on("end", () => {
       const parsedBody = Buffer.concat(body).toString();
       const message = parsedBody.split("=")[1];
-      fs.writeFile("message.txt", message, (err) => {
+      writeFile("message.txt", message, (err) => {
         console.log(err);
         res.statusCode = 302;
         res.setHeader("Location", "/");
@@ -51,4 +51,4 @@ const requestHandler = (req, res) => {
   res.end();
 };
 
-module.exports = requestHandler;
+export default requestHandler;

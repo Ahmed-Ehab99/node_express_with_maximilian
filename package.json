@@ -1,0 +1,24 @@
+{
+  "name": "node_express_with_maximilian",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/Ahmed-Ehab99/node_express_with_maximilian#readme",
+  "bugs": {
+    "url": "https://github.com/Ahmed-Ehab99/node_express_with_maximilian/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ahmed-Ehab99/node_express_with_maximilian.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js"
+  },
+  "dependencies": {
+    "nodemon": "^3.1.14"
+  }
+}
