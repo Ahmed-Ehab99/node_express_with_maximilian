@@ -1,9 +1,20 @@
-import express from "express";
-import { getAddProduct, postAddProduct } from "../controllers/admin.js";
+import { Router } from "express";
+import {
+  getAddProduct,
+  getAdminIndex,
+  getEditProduct,
+  postAddProduct,
+  postDeleteProduct,
+  postEditProduct,
+} from "../controllers/admin.js";
 
-const router = express.Router();
+const router = Router();
 
 router.get("/add-product", getAddProduct);
+router.get("/products", getAdminIndex);
 router.post("/add-product", postAddProduct);
+router.get("/edit-product/:productId", getEditProduct);
+router.post("/edit-product", postEditProduct);
+router.post("/delete-product", postDeleteProduct);
 
 export default router;
