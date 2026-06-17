@@ -2,7 +2,7 @@ import { addProduct, deleteProduct, getCartProducts } from "../models/cart.js";
 import { fetchAllProducts, findProductById } from "../models/product.js";
 
 export const getProducts = (req, res, next) => {
-  fetchAllProducts().then(([rows, fieldData]) => {
+  fetchAllProducts().then(([rows]) => {
     res.render("shop/product-list", {
       products: rows,
       pageTitle: "All Products",
@@ -14,18 +14,22 @@ export const getProducts = (req, res, next) => {
 export const getProduct = (req, res, next) => {
   const prodId = req.params.productId;
 
-  findProductById(prodId, (product) => {
-    res.render("shop/product-detail", {
-      product,
-      pageTitle: product.title,
-      path: "/products",
+  findProductById(prodId)
+    .then(([product]) => {
+      res.render("shop/product-detail", {
+        product: product[0],
+        pageTitle: product.title,
+        path: "/products",
+      });
+    })
+    .catch((err) => {
+      console.log(err);
     });
-  });
 };
 
 export const getShopIndex = (req, res, next) => {
   fetchAllProducts()
-    .then(([rows, fieldData]) => {
+    .then(([rows]) => {
       res.render("shop/index", {
         products: rows,
         pageTitle: "Shop",

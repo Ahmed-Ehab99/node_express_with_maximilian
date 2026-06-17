@@ -13,4 +13,6 @@ export const fetchAllProducts = () => {
   return db.execute("SELECT * FROM products");
 };
 
-export const findProductById = (id) => {};
+export const findProductById = (id) => {
+  return db.execute("SELECT * FROM products WHERE products.id = ?", [id]);
+};
