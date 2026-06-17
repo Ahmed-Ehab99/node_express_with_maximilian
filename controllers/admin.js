@@ -22,8 +22,13 @@ export const postAddProduct = (req, res, next) => {
     price: req.body.price,
   };
 
-  saveProduct(product);
-  res.redirect("/");
+  saveProduct(product)
+    .then(() => {
+      res.redirect("/");
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 export const getEditProduct = (req, res, next) => {

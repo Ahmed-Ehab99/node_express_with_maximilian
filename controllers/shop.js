@@ -2,9 +2,9 @@ import { addProduct, deleteProduct, getCartProducts } from "../models/cart.js";
 import { fetchAllProducts, findProductById } from "../models/product.js";
 
 export const getProducts = (req, res, next) => {
-  fetchAllProducts((products) => {
+  fetchAllProducts().then(([rows, fieldData]) => {
     res.render("shop/product-list", {
-      products,
+      products: rows,
       pageTitle: "All Products",
       path: "/products",
     });
@@ -24,13 +24,15 @@ export const getProduct = (req, res, next) => {
 };
 
 export const getShopIndex = (req, res, next) => {
-  fetchAllProducts((products) => {
-    res.render("shop/index", {
-      products,
-      pageTitle: "Shop",
-      path: "/",
-    });
-  });
+  fetchAllProducts()
+    .then(([rows, fieldData]) => {
+      res.render("shop/index", {
+        products: rows,
+        pageTitle: "Shop",
+        path: "/",
+      });
+    })
+    .catch((err) => console.log(err));
 };
 
 export const getCart = (req, res, next) => {
