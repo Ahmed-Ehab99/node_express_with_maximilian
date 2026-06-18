@@ -1,10 +1,8 @@
-import mysql from "mysql2";
+const Sequelize = require("sequelize");
 
-const pool = mysql.createPool({
+const sequelize = new Sequelize.Sequelize("learn-node", "root", "admin", {
+  dialect: "mysql",
   host: "localhost",
-  user: "root",
-  database: "learn-node",
-  password: "admin",
 });
 
-export default pool.promise();
+module.exports = sequelize;

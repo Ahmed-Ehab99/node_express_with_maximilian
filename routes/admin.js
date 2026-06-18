@@ -1,20 +1,24 @@
-import { Router } from "express";
-import {
-  getAddProduct,
-  getAdminIndex,
-  getEditProduct,
-  postAddProduct,
-  postDeleteProduct,
-  postEditProduct,
-} from "../controllers/admin.js";
+const path = require("path");
 
-const router = Router();
+const express = require("express");
 
-router.get("/add-product", getAddProduct);
-router.get("/products", getAdminIndex);
-router.post("/add-product", postAddProduct);
-router.get("/edit-product/:productId", getEditProduct);
-router.post("/edit-product", postEditProduct);
-router.post("/delete-product", postDeleteProduct);
+const adminController = require("../controllers/admin");
 
-export default router;
+const router = express.Router();
+
+// /admin/add-product => GET
+router.get("/add-product", adminController.getAddProduct);
+
+// /admin/products => GET
+router.get("/products", adminController.getProducts);
+
+// /admin/add-product => POST
+router.post("/add-product", adminController.postAddProduct);
+
+router.get("/edit-product/:productId", adminController.getEditProduct);
+
+router.post("/edit-product", adminController.postEditProduct);
+
+router.post("/delete-product", adminController.postDeleteProduct);
+
+module.exports = router;

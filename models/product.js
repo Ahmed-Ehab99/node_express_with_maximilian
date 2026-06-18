@@ -1,18 +1,26 @@
-import db from "../utils/database.js";
+const Sequelize = require("sequelize");
+const sequelize = require("../utils/database");
 
-export const saveProduct = (product) => {
-  return db.execute(
-    "INSERT INTO products (title, price, description, imageUrl) VALUES (?, ?, ?, ?)",
-    [product.title, product.price, product.description, product.imageUrl]
-  );
-};
+const Product = sequelize.define("product", {
+  id: {
+    type: Sequelize.INTEGER,
+    autoIncrement: true,
+    allowNull: false,
+    primaryKey: true,
+  },
+  title: Sequelize.STRING,
+  price: {
+    type: Sequelize.DOUBLE,
+    allowNull: false,
+  },
+  description: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+  imageUrl: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+});
 
-export const deleteProductById = (id) => {};
-
-export const fetchAllProducts = () => {
-  return db.execute("SELECT * FROM products");
-};
-
-export const findProductById = (id) => {
-  return db.execute("SELECT * FROM products WHERE products.id = ?", [id]);
-};
+module.exports = Product;

@@ -1,11 +1,6 @@
-import {
-  deleteProductById,
-  fetchAllProducts,
-  findProductById,
-  saveProduct,
-} from "../models/product.js";
+const Product = require("../models/product");
 
-export const getAddProduct = (req, res, next) => {
+exports.getAddProduct = (req, res, next) => {
   res.render("admin/edit-product", {
     pageTitle: "Add Product",
     path: "/admin/add-product",
@@ -13,74 +8,98 @@ export const getAddProduct = (req, res, next) => {
   });
 };
 
-export const postAddProduct = (req, res, next) => {
-  const product = {
-    id: null,
-    title: req.body.title,
-    imageUrl: req.body.imageUrl,
-    description: req.body.description,
-    price: req.body.price,
-  };
-
-  saveProduct(product)
-    .then(() => {
-      res.redirect("/");
+exports.postAddProduct = (req, res, next) => {
+  const title = req.body.title;
+  const imageUrl = req.body.imageUrl;
+  const price = req.body.price;
+  const description = req.body.description;
+  Product.create({
+    title: title,
+    price: price,
+    description: description,
+    imageUrl: imageUrl,
+  })
+    .then((result) => {
+      // console.log(result);
+      console.log("Created Product");
+      res.redirect("/admin/products");
     })
     .catch((err) => {
       console.log(err);
     });
 };
 
-export const getEditProduct = (req, res, next) => {
+exports.getEditProduct = (req, res, next) => {
   const editMode = req.query.edit;
   if (!editMode) {
     return res.redirect("/");
   }
-
   const prodId = req.params.productId;
-  findProductById(prodId, (product) => {
-    if (!product) {
-      return res.redirect("/");
-    }
-    res.render("admin/edit-product", {
-      pageTitle: "Edit Product",
-      path: "/admin/edit-product",
-      editing: editMode,
-      product,
+  Product.findByPk(prodId)
+    .then((product) => {
+      if (!product) {
+        return res.redirect("/");
+      }
+      res.render("admin/edit-product", {
+        pageTitle: "Edit Product",
+        path: "/admin/edit-product",
+        editing: editMode,
+        product: product,
+      });
+    })
+    .catch((err) => {
+      console.log(err);
     });
-  });
 };
 
-export const postEditProduct = (req, res, next) => {
+exports.postEditProduct = (req, res, next) => {
   const prodId = req.body.productId;
   const updatedTitle = req.body.title;
+  const updatedPrice = req.body.price;
   const updatedImageUrl = req.body.imageUrl;
   const updatedDescription = req.body.description;
-  const updatedPrice = req.body.price;
-
-  saveProduct(
-    prodId,
-    updatedTitle,
-    updatedImageUrl,
-    updatedDescription,
-    updatedPrice
-  );
-
-  res.redirect("/admin/products");
-};
-
-export const postDeleteProduct = (req, res, next) => {
-  const prodId = req.body.productId;
-  deleteProductById(prodId);
-  res.redirect("/admin/products");
-};
-
-export const getAdminIndex = (req, res, next) => {
-  fetchAllProducts((products) => {
-    res.render("admin/products", {
-      products,
-      pageTitle: "Admin Products",
-      path: "/admin/products",
+  Product.findByPk(prodId)
+    .then((product) => {
+      product.title = updatedTitle;
+      product.price = updatedPrice;
+      product.description = updatedDescription;
+      product.imageUrl = updatedImageUrl;
+      return product.save();
+    })
+    .then((result) => {
+      console.log("Updated Product");
+      res.redirect("/admin/products");
+    })
+    .catch((err) => {
+      console.log(err);
     });
-  });
+};
+
+exports.getProducts = (req, res, next) => {
+  Product.findAll()
+    .then((products) => {
+      res.render("admin/products", {
+        products,
+        pageTitle: "Admin Products",
+        path: "/admin/products",
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+exports.postDeleteProduct = (req, res, next) => {
+  const prodId = req.body.productId;
+  Product.findByPk(prodId)
+    .then((product) => {
+      return product.destroy();
+    })
+    .then((result) => {
+      console.log("Destroyed Product");
+      res.redirect("/admin/products");
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
