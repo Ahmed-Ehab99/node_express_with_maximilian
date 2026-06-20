@@ -6,6 +6,8 @@ const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
 const Product = require("./models/product");
 const User = require("./models/user");
+const Cart = require("./models/cart");
+const CartItem = require("./models/cart-item");
 
 const app = express();
 
@@ -31,10 +33,19 @@ app.use(shopRoutes);
 
 app.use(errorController.get404);
 
-Product.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
+// associations
+// User <=> Product
 User.hasMany(Product);
+Product.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
+// User <=> Cart
+User.hasOne(Cart);
+Cart.belongsTo(User);
+// Cart <=> Product
+Cart.belongsToMany(Product, { through: CartItem });
+Product.belongsToMany(Cart, { through: CartItem });
 
 sequelize
+  // .sync({ force: true }) // to sync with tables and override any data we stored
   .sync()
   .then((result) => {
     return User.findByPk(1);
@@ -46,7 +57,9 @@ sequelize
     return user;
   })
   .then((user) => {
-    // console.log(user);
+    return user.createCart();
+  })
+  .then((cart) => {
     app.listen(3000);
   })
   .catch((err) => {
