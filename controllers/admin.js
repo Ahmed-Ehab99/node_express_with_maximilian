@@ -20,8 +20,7 @@ exports.postAddProduct = (req, res, next) => {
       description: description,
       imageUrl: imageUrl,
     })
-    .then((result) => {
-      // console.log(result);
+    .then(() => {
       console.log("Created Product");
       res.redirect("/admin/products");
     })
@@ -69,7 +68,7 @@ exports.postEditProduct = (req, res, next) => {
       product.imageUrl = updatedImageUrl;
       return product.save();
     })
-    .then((result) => {
+    .then(() => {
       console.log("Updated Product");
       res.redirect("/admin/products");
     })
@@ -98,7 +97,7 @@ exports.postDeleteProduct = (req, res, next) => {
     .then((product) => {
       return product.destroy();
     })
-    .then((result) => {
+    .then(() => {
       console.log("Destroyed Product");
       res.redirect("/admin/products");
     })

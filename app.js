@@ -19,6 +19,7 @@ app.set("views", "views");
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
+// find current user
 app.use((req, res, next) => {
   User.findByPk(1)
     .then((user) => {
@@ -54,7 +55,7 @@ Order.belongsToMany(Product, { through: OrderItem });
 sequelize
   // .sync({ force: true }) // to sync with tables and override any data we stored
   .sync()
-  .then((result) => {
+  .then(() => {
     return User.findByPk(1);
   })
   .then((user) => {
@@ -66,7 +67,7 @@ sequelize
   .then((user) => {
     return user.createCart();
   })
-  .then((cart) => {
+  .then(() => {
     app.listen(3000);
   })
   .catch((err) => {
