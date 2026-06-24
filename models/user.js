@@ -17,18 +17,32 @@ class User {
   }
 
   addToCart(product) {
-    // const cartItem = this.cart.item.findIndex((item) => {
-    //   return item._id === product._id;
-    // });
+    const currentItems = this.cart ? this.cart.items : [];
+
+    const cartProductIndex = currentItems.findIndex((cartProduct) => {
+      return cartProduct.productId.toString() === product._id.toString();
+    });
+    let newQuantity = 1;
+    const updatedCartItems = [...currentItems];
+
+    if (cartProductIndex >= 0) {
+      newQuantity = currentItems[cartProductIndex].quantity + 1;
+      updatedCartItems[cartProductIndex].quantity = newQuantity;
+    } else {
+      updatedCartItems.push({
+        productId: new ObjectId(product._id),
+        quantity: newQuantity,
+      });
+    }
 
     const updatedCart = {
-      item: [{ productId: new ObjectId(product._id), quantity: 1 }],
+      items: updatedCartItems,
     };
     const db = getDb();
     return db
       .collection("users")
       .updateOne(
-        { _id: new Object(this._id) },
+        { _id: new ObjectId(this._id) },
         { $set: { cart: updatedCart } }
       );
   }
