@@ -13,7 +13,7 @@ let _db;
  */
 const mongoConnect = (callback) => {
   MongoClient.connect(
-    "mongodb+srv://a7medeha6:ngBs09LUq45Zn1F3@cluster0.a9fuyst.mongodb.net/?appName=Cluster0"
+    `mongodb+srv://a7medeha6:${process.env.DB_PASSWORD}@cluster0.a9fuyst.mongodb.net/?appName=Cluster0`
   )
     .then((client) => {
       console.log("Connected!");
